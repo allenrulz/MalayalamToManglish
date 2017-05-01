@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class Transliterate {
 
 	public static void main(String[] args) {
-		String malayalamString = "എഞ്ചിൻ";
+		String malayalamString = "യുദ്ധം";
 		StringBuilder englishString = new StringBuilder("");
 		PreparedStatement stmt = null;
 		try {
@@ -27,16 +27,17 @@ public class Transliterate {
 					consonant = rs.getString(2);
 				}
 				
-				if("Consonant".equals(consonant)){
-					if((i+1) != malayalamString.length() - 1){
-						int nextChar = (int) malayalamString.charAt(i+1);
-						stmt = conn.prepareStatement("select type from englishmalayalam where malayalam = ? limit 1");
-						stmt.setString(1, nextChar + "");
-						rs = stmt.executeQuery();
-						while(rs.next()){
-							if("Sign".equals(rs.getString(1))){
-								++i;
-								break;
+				if(i < malayalamString.length() - 1){
+					if("Consonant".equals(consonant)){
+						if((i+1) < malayalamString.length()){
+							int nextChar = (int) malayalamString.charAt(i+1);
+							stmt = conn.prepareStatement("select type from englishmalayalam where malayalam = ? limit 1");
+							stmt.setString(1, nextChar + "");
+							rs = stmt.executeQuery();
+							while(rs.next()){
+								if(!"Sign".equals(rs.getString(1))){
+									englishString.append("A");
+								}
 							}
 						}
 					}
